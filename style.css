@@ -65,3 +65,5 @@
  .service-stage .service-visual{height:clamp(165px,calc(100svh - var(--header) - 460px),310px)}
 }
 @media(max-width:850px) and (max-height:740px){.service-stage .service-visual{height:clamp(135px,calc(100svh - var(--header) - 380px),200px)}}
+/* Keep the static service illustration inside its column at every viewport. */
+@media(prefers-reduced-motion:reduce){.service-stage .service-visual{width:100%;height:auto;aspect-ratio:1586/991}.service-zone-map{height:auto;aspect-ratio:1586/991}}
