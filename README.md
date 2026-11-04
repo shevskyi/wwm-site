@@ -1,14 +1,13 @@
-# WWM spatial website concept
+# WWM — spatial review website
 
 Live review: https://shevskyi.github.io/wwm-site/
 
-Vanilla HTML, CSS and JavaScript. No build step or framework.
-Serve locally with `python3 -m http.server 8875` and open http://127.0.0.1:8875/.
+Vanilla HTML, CSS and JavaScript, published from main at the repository root. Serve locally with `python3 -m http.server 8875`.
 
-Native scrolling transforms an illustrative drawing into a constructed and finished interior. The services section reveals individual photographic fragments over the drawing: ceilings, partitions and finishes. Service links, keyboard navigation, reduced motion and a static fallback (`?view=static`) are supported.
+05 November 2026: editorial service gallery, information on the right and a mineral/steel palette selected by the owner. Native scrolling moves from drawing through illustrative construction to a finished interior; supporting text changes with the scene. In services, hover/focus/touch reveals a selected photographic surface over a drawing and dims neighboring cards. Service details stay on the page. Arrow keys, Home/End, Escape and reduced motion are supported. Static preview: `?view=static` or `?motion=off`.
 
-This Ukrainian review concept is not the final multilingual company website. The contact form only prepares text locally and sends nothing. Polish/English, final business details, search configuration, analytics and actual lead delivery remain future work.
+This Ukrainian review concept is not the final multilingual company website. The form prepares local text and sends nothing. Real enquiry delivery, Polish/English, final business details, search configuration and analytics remain future work.
 
-The room and its construction states are synthetic illustrations, not completed WWM work. The clearly labelled historical photograph represents the executive’s experience before WWM. Geologica is distributed under the SIL Open Font License included in assets/Geologica-OFL.txt. Other image assets are provided here for this WWM design review; no general reuse license is granted.
+Room states and the labelled archive-based reconstruction are illustrative. Original archive photos describe the executive's Israel experience in 2014–2019, before WWM; they do not establish current company capacity. No customer reviews, warranties or capacity figures have been invented.
 
-GitHub Pages publishes the main branch root. Keep all runtime URLs relative for the /wwm-site/ project path. Private project history and working materials are intentionally excluded from this repository.
+All runtime paths are relative for /wwm-site/. Geologica's SIL Open Font License is included in assets/Geologica-OFL.txt. Image assets are supplied for this WWM review; no general reuse license is granted. Working drafts, comparisons, research, image prompts and project history are excluded from the public repository.
