@@ -8,6 +8,6 @@ Vanilla HTML, CSS and JavaScript, published from main at the repository root. Se
 
 This Ukrainian review concept is not the final multilingual company website. The form prepares local text and sends nothing. Real enquiry delivery, Polish/English, final business details, search configuration and analytics remain future work.
 
-Room states and the labelled archive-based reconstruction are illustrative. Original archive photos describe the executive's Israel experience in 2014–2019, before WWM; they do not establish current company capacity. No customer reviews, warranties or capacity figures have been invented.
+Room states and the labelled archive-based reconstruction are illustrative. The experience viewer links four selectable images with matching descriptions and source labels, with a full-image dialog. Cooperation links three steps and a direction-dependent diagram to preparation questions. Original archive photos describe the executive's Israel experience in 2014–2019, before WWM; they do not establish current company capacity. No customer reviews, warranties or capacity figures have been invented.
 
 All runtime paths are relative for /wwm-site/. Geologica's SIL Open Font License is included in assets/Geologica-OFL.txt. Image assets are supplied for this WWM review; no general reuse license is granted. Working drafts, comparisons, research, image prompts and project history are excluded from the public repository.

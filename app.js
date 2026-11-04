@@ -107,11 +107,12 @@ function selectService(key,reason="init"){
  document.querySelectorAll('.service-map title').forEach(el=>el.textContent=`Ілюстрація: ${item.image} на кресленні приміщення.`);
  document.querySelectorAll('[data-surface]').forEach(surface=>surface.classList.toggle('is-active',surface.dataset.surface===key));
  document.querySelector('.services').dataset.selected=key;
+ document.dispatchEvent(new Event('wwm:service-change'));
  if(previous&&!reduce.matches)servicePanel.animate([{opacity:.72,transform:'translateY(5px)'},{opacity:1,transform:'none'}],{duration:220,easing:'ease-out'});
 }
-function wireTabs(items,select,keyName){items.forEach((button,index)=>{
+function wireTabs(items,select,keyName,preview=true){items.forEach((button,index)=>{
  button.addEventListener('click',()=>select(button.dataset[keyName],'click'));
- button.addEventListener('pointerenter',()=>{if(matchMedia('(hover:hover) and (pointer:fine)').matches)select(button.dataset[keyName],'hover')});
+ button.addEventListener('pointerenter',()=>{if(preview&&matchMedia('(hover:hover) and (pointer:fine)').matches)select(button.dataset[keyName],'hover')});
  button.addEventListener('focus',()=>select(button.dataset[keyName],'focus'));
  button.addEventListener('keydown',event=>{
   if(!['ArrowDown','ArrowRight','ArrowUp','ArrowLeft','Home','End'].includes(event.key))return;
@@ -184,9 +185,10 @@ function selectWork(key){
  const previous=panel.dataset.selected;selectedWork=key;panel.dataset.selected=key;panel.setAttribute('aria-labelledby','work-'+key);
  workTabs.forEach(tab=>{const active=tab.dataset.work===key;tab.setAttribute('aria-selected',String(active));tab.tabIndex=active?0:-1});
  const item=workData[key];document.querySelector('#work-title').textContent=item.title;document.querySelector('#work-description').textContent=item.description;setList('#work-items',item.items);
+ document.dispatchEvent(new Event('wwm:work-change'));
  if(previous&&!reduce.matches)panel.animate([{opacity:.72,transform:'translateY(5px)'},{opacity:1,transform:'none'}],{duration:220,easing:'ease-out'});
 }
-wireTabs(workTabs,selectWork,'work');selectWork(selectedWork);
+wireTabs(workTabs,selectWork,'work',false);selectWork(selectedWork);
 
 const archiveDialog=document.querySelector('#archive-viewer');
 let archiveTrigger;
@@ -218,3 +220,51 @@ Promise.all([document.fonts.ready,pageLoaded]).then(()=>requestAnimationFrame(()
  if(target)target.scrollIntoView({block:'start',behavior:'instant'});
  scheduleChapter();
 }));
+
+
+const evidenceItems={
+ study:{src:'assets/archive-study.webp',alt:'Ілюстративна реконструкція криволінійної конструкції за архівом',kind:'Ілюстрація за архівом',title:'Роздивитися внутрішню будову.',description:'Реконструкція допомагає побачити зв’язок каркаса й криволінійної площини. Документальні кадри — у добірці поруч.',subject:'Каркас і площина',source:'Ілюстрація за матеріалами досвіду керівника',caption:'Візуальна реконструкція за архівним фото.',position:'50% 44%',fit:'cover'},
+ frame:{src:'assets/archive-construction.jpg',alt:'Архівне фото відкритого каркаса та криволінійних стельових площин',kind:'Архівне фото',title:'Каркас до завершення обшивки.',description:'Відкриті ділянки показують внутрішню будову стелі. У цьому кадрі поруч видно каркас, обшивку та інженерні комунікації.',subject:'Відкритий каркас і обшивка',source:'Досвід керівника, Ізраїль, 2014–2019',caption:'Незмінений архівний кадр. Досвід керівника до заснування WWM.',position:'50% 50%',fit:'contain'},
+ curve:{src:'assets/archive-curve.jpg',alt:'Архівне фото криволінійних напрямних на стельовій конструкції',kind:'Архівне фото',title:'Контур читається ще під час монтажу.',description:'На поверхні видно криволінійні напрямні та їхнє взаємне розташування. Окремий кадр із матеріалів досвіду керівника.',subject:'Криволінійні напрямні',source:'Досвід керівника, Ізраїль, 2014–2019',caption:'Окремий архівний кадр криволінійної конструкції. Досвід керівника до WWM.',position:'50% 50%',fit:'contain'},
+ plane:{src:'assets/archive-detail.jpg',alt:'Архівне фото об’ємної стельової конструкції з круглим прорізом',kind:'Архівне фото',title:'Обшивка вже задає об’єм.',description:'Круглий проріз, криволінійний борт і перехід площин видно до чистового оздоблення. Архівний ракурс пояснює характер виконуваних конструкцій.',subject:'Проріз і криволінійна площина',source:'Досвід керівника, Ізраїль, 2014–2019',caption:'Незмінений архівний кадр об’ємної конструкції. Досвід керівника до WWM.',position:'50% 50%',fit:'contain'}
+};
+const evidenceTabs=[...document.querySelectorAll('[data-evidence]')];
+let evidenceActive='study',evidenceAnimation;
+function selectEvidence(key,reason='init'){
+ const item=evidenceItems[key];if(!item)return;
+ evidenceActive=key;
+ evidenceTabs.forEach(t=>{const active=t.dataset.evidence===key;t.setAttribute('aria-selected',String(active));t.tabIndex=active?0:-1});
+ const img=document.querySelector('#evidence-image');img.src=item.src;img.alt=item.alt;img.style.objectFit=item.fit;img.style.objectPosition=item.position;
+ for(const [id,value] of Object.entries({'evidence-kind':item.kind,'evidence-title':item.title,'evidence-description':item.description,'evidence-subject':item.subject,'evidence-source':item.source,'evidence-caption':item.caption}))document.getElementById(id).textContent=value;
+ const panel=document.querySelector('#evidence-panel');panel.setAttribute('aria-labelledby','evidence-'+key);
+ const open=document.querySelector('#evidence-open');open.dataset.archive=item.src;open.dataset.caption=item.caption;
+ if(reason!=='init'&&!reduce.matches){evidenceAnimation?.cancel();evidenceAnimation=img.animate([{opacity:.55},{opacity:1}],{duration:260,easing:'ease-out'})}
+ const tab=document.querySelector('#evidence-'+key),rail=tab.parentElement;
+ if(innerWidth<=480&&reason!=='init')requestAnimationFrame(()=>{rail.scrollTo({left:rail.scrollLeft+tab.getBoundingClientRect().left-rail.getBoundingClientRect().left,behavior:reduce.matches?'instant':'smooth'})});
+}
+// Preview is an explicit choice; reading a caption does not trigger another scene.
+evidenceTabs.forEach((t,index)=>{
+ t.addEventListener('click',()=>selectEvidence(t.dataset.evidence,'click'));
+ t.addEventListener('keydown',e=>{
+  if(!['ArrowRight','ArrowLeft','Home','End'].includes(e.key))return;e.preventDefault();
+  const next=e.key==='Home'?0:e.key==='End'?evidenceTabs.length-1:(index+(e.key==='ArrowRight'?1:-1)+evidenceTabs.length)%evidenceTabs.length;
+  evidenceTabs[next].focus({preventScroll:true});selectEvidence(evidenceTabs[next].dataset.evidence,'keyboard');
+ });
+});selectEvidence(evidenceActive);
+const processLayout=document.querySelector('.process-layout');
+const scopeButtons=[...document.querySelectorAll('button[data-direction]')];
+let processDirection=currentService;
+const diagramCopy={project:'Спочатку бачимо проєкт цілком.',scope:'Виділяємо саме ту частину, за яку відповідає WWM.',order:'Готовність об’єкта, наш етап, передача погодженого обсягу.'};
+const scopeNames={ceilings:'Для стель знадобляться',partitions:'Для перегородок знадобляться',finishes:'Для оздоблення знадобляться'};
+function paintProcess(){
+ processLayout.dataset.process=selectedWork;processLayout.dataset.direction=processDirection;
+ document.querySelector('#diagram-caption').textContent=diagramCopy[selectedWork];
+ document.querySelector('#scope-label').textContent=scopeNames[processDirection];
+ setList('#scope-questions',data[processDirection].questions);
+ scopeButtons.forEach(t=>t.setAttribute('aria-pressed',String(t.dataset.direction===processDirection)));
+}
+scopeButtons.forEach(t=>t.addEventListener('click',()=>{processDirection=t.dataset.direction;paintProcess()}));
+document.addEventListener('wwm:work-change',paintProcess);
+document.addEventListener('wwm:service-change',()=>{processDirection=currentService;paintProcess()});
+document.querySelector('#process-enquiry').addEventListener('click',()=>{document.querySelector('[name=service]').value=processDirection});
+paintProcess();
